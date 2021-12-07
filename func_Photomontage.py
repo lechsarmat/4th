@@ -39,7 +39,7 @@ def Photomontage(P, B, a = 90., b = 5.):
     """
     if type( P ) != np.ndarray or type( B ) != np.ndarray:
         raise TypeError( "P and B must be numpy arrays" )
-    if len( P.shape ) != 4 or len( B.shape ) != 3:
+    if len( P.shape ) != 4 or not (len( B.shape ) == 3 or len( B.shape ) == 4):
         raise ValueError( "wrong dimensionality" )
     if P.shape[0] != B.shape[0] or P.shape[3] != 3:
         raise ValueError( "wrong shape of P or B" )
@@ -58,6 +58,9 @@ def Photomontage(P, B, a = 90., b = 5.):
 
     x, y, m = P.shape[1], P.shape[2], P.shape[0]
     K = np.abs(np.mgrid[0:m,0:m][0]).astype(int)
+
+    if len(B.shape) == 4:
+        B = B[:,:,:,0]
 
     X = np.mgrid[0:m,0:x,0:y][2].astype(float)
     X[:,:,0] = a*(1 - B[:, :, 0])
